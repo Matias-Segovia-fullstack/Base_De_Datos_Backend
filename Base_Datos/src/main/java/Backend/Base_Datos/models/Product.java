@@ -28,7 +28,7 @@ public class Product {
     private String price;
 
     @Column(nullable = false)
-    @NotBlank(message = "El stock no puede ser vacio")
+    @NotNull(message = "El stock no puede ser vacio")
     private String stock;
 
     @Column
