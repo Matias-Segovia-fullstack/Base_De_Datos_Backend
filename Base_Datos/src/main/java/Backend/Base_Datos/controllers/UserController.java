@@ -54,4 +54,10 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countUsers() {
+        long count = userService.countUsers();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 }
