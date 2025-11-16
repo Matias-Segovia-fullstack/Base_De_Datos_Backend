@@ -39,4 +39,10 @@ public class ProductController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> countProducts() {
+        long count = productService.countProducts();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
 }
