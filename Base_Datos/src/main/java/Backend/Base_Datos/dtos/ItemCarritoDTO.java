@@ -11,9 +11,9 @@ public class ItemCarritoDTO {
 
     private Long idProducto;
     private String name;
-    private String price;
+    private Integer price;
     private String imageUrl;
-    private String stock;
+    private Integer stock;
 
-    private String subtotal;
+    private Long subtotal;
 }

@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class CartItemServiceImpl implements CartItemService {
+public class    CartItemServiceImpl implements CartItemService {
 
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
@@ -43,7 +43,7 @@ public class CartItemServiceImpl implements CartItemService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + productId));
 
-        int currentStock = Integer.parseInt(product.getStock());
+        int currentStock = product.getStock();
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad a agregar debe ser positiva.");
         }
@@ -106,24 +106,17 @@ public class CartItemServiceImpl implements CartItemService {
         dto.setIdProducto(product.getIdProducto());
         dto.setName(product.getNombreProducto());
         dto.setImageUrl(product.getImageUrl());
+
+
         dto.setStock(product.getStock());
 
-        try {
-            String priceString = product.getPrice().replace(".", "");
+        Integer precioUnitario = product.getPrice();
 
-            BigDecimal precioUnitario = new BigDecimal(priceString);
+        Long subtotal = (long) precioUnitario * item.getCantidad();
 
-            BigDecimal subtotal = precioUnitario.multiply(new BigDecimal(item.getCantidad()));
+        dto.setPrice(precioUnitario);
 
-            dto.setPrice(product.getPrice());
-
-            dto.setSubtotal(subtotal.setScale(0, RoundingMode.HALF_UP).toString());
-
-        } catch (NumberFormatException | NullPointerException e) {
-            System.err.println("Error al parsear precio o subtotal para el producto ID: " + product.getIdProducto());
-            dto.setPrice(product.getPrice());
-            dto.setSubtotal("Precio no disponible");
-        }
+        dto.setSubtotal(subtotal);
 
         return dto;
     }
