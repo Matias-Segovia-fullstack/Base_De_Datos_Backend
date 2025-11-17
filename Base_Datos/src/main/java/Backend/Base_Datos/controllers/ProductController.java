@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,19 @@ public class ProductController {
     public ResponseEntity<Void> borrar (@PathVariable Long id){
         productService.deleteProductById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/decrease-stock/{id}")
+    public ResponseEntity<Void> decreaseStock(
+            @PathVariable Long id,
+            @RequestBody Map<String, Integer> payload) {
+        Integer quantity = payload.get("quantity");
+        if (quantity == null || quantity <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        productService.decreaseStock(id, quantity);
+        return ResponseEntity.ok().build();
     }
 
 }
