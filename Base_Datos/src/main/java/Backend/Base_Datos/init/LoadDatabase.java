@@ -64,15 +64,15 @@ public class LoadDatabase implements CommandLineRunner {
     private void loadProducts() {
 
         List<Product> products = List.of(
-                new Product(null, "Catan", "Juegos de mesa", "29.990", "10", "catan_url"),
-                new Product(null, "Carcassonne", "Juegos de mesa", "24.990", "5", "carcassonne_url"),
-                new Product(null, "Controlador inalambrico xbox series X", "Accesorios", "59.990", "20", "cont_xbox_url"),
-                new Product(null, "Auriculares Gamer hyperX Cloud II ", "Accesorios", "79.990", "20", "auri_gam_url"),
-                new Product(null, "Playstation 5", "Consolas", "549.990", "8", "play5_url"),
-                new Product(null, "PC gamer ASUS ROG STRIX", "Computadoras gamers", "1.299.990", "5", "pc_gamer_url"),
-                new Product(null, "Silla gamer Secretlab titan", "Sillas gamer", "349.990", "18", "silla_gamer_st_url"),
-                new Product(null, "Mousepad Razer goliathus extended chroma", "Mousepads", "29.990", "30", "mousepad_razer_url"),
-                new Product(null, "Polera gamer personalizada 'level-up'croma", "Poleras y polerones personalizados", "14.990", "18", "polera_per_url")
+                new Product(null, "Catan", "Juegos de mesa", 29990, 10, "catan_url"),
+                new Product(null, "Carcassonne", "Juegos de mesa", 24990, 5, "carcassonne_url"),
+                new Product(null, "Controlador inalambrico xbox series X", "Accesorios", 59990, 20, "cont_xbox_url"),
+                new Product(null, "Auriculares Gamer hyperX Cloud II ", "Accesorios", 79990, 20, "auri_gam_url"),
+                new Product(null, "Playstation 5", "Consolas", 549990, 20, "play5_url"),
+                new Product(null, "PC gamer ASUS ROG STRIX", "Computadoras gamers", 1299990, 5, "pc_gamer_url"),
+                new Product(null, "Silla gamer Secretlab titan", "Sillas gamer", 349990, 18, "silla_gamer_st_url"),
+                new Product(null, "Mousepad Razer goliathus extended chroma", "Mousepads", 29990, 30, "mousepad_razer_url"),
+                new Product(null, "Polera gamer personalizada 'level-up'croma", "Poleras y polerones personalizados", 14990, 18, "polera_per_url")
         );
         productRepository.saveAll(products);
     }
