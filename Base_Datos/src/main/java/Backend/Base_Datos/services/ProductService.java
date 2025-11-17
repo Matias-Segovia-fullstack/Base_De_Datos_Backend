@@ -11,4 +11,5 @@ public interface ProductService {
     Optional<Product> getProductById(Long id);
     void deleteProductById(Long id);
     long countProducts();
+    void decreaseStock(Long productId, int quantity);
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -18,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product saveOrUpdateProduct (Product product){
+    public Product saveOrUpdateProduct(Product product) {
         return productRepository.save(product);
     }
 
@@ -41,4 +42,21 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void decreaseStock(Long productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + productId));
+
+        int currentStock = Integer.parseInt(product.getStock());
+
+        if (currentStock < quantity) {
+
+            throw new RuntimeException("Stock insuficiente. Solo quedan " + currentStock + " unidades.");
+        }
+
+
+    }
+
 }
