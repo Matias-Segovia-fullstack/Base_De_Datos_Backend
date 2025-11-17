@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + productId));
 
-        int currentStock = Integer.parseInt(product.getStock());
+        int currentStock = product.getStock();
 
         if (currentStock < quantity) {
 

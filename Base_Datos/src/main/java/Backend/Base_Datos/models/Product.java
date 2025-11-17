@@ -28,8 +28,9 @@ public class Product {
     private String price;
 
     @Column(nullable = false)
-    @NotNull(message = "El stock no puede ser vacio")
-    private String stock;
+    @NotNull(message = "El stock es obligatoria")
+    @Min(value = 0, message = "El stock debe ser al menos 0")
+    private Integer stock;
 
     @Column
     private String imageUrl;
