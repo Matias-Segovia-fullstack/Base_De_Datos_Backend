@@ -1,19 +1,18 @@
 package Backend.Base_Datos.models;
 
-import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-
-import java.time.format.DecimalStyle;
+import java.util.ArrayList;
+import java.util.List;
 
 @Schema(description = "Modelo de datos que representa a un usuario en el sistema. Se utiliza como contrato de la API.")
 @Entity
 @Table(name="usuario")
-@Getter @Setter @ToString
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
 public class User {
 
     @Id
@@ -42,15 +41,33 @@ public class User {
     @NotBlank(message = "Debe ingresar una contraseña")
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     @Schema(description = "Contraseña del usuario", example = "cliente123")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String contrasena;
-
-    @Column(nullable = false)
-    @NotBlank(message = "El rol no puede ser vacio")
-    @Schema(description = "Rol del usuario", example = "Cliente")
-    private String rolUsuario;
 
     @Column
     @Schema( description = "Url que contiene avatar del usuario", example = "httsp://avatar.com")
     private String avatarUrl;
+
+
+
+    @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean admin;
+
+    private Boolean enabled = true;
+
+    @JsonIgnoreProperties({"users", "hibernateLazyInitializer", "handler"})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id"),
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id"})}
+    )
+    private List<Role> roles;
+
+    public User() {
+        this.roles = new ArrayList<>();
+    }
 
 }
