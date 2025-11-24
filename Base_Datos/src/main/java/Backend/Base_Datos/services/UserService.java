@@ -12,6 +12,5 @@ public interface UserService {
     void deleteUserById(Long id);
     Optional<User> getUserByRut(String rut);
     Optional<User> getUserByCorreo(String correo);
-    Optional<User> authenticateUser(String correo, String contrasena);
     long countUsers();
 }

@@ -54,22 +54,6 @@ public class UserController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @Operation(summary = "Autentica un usuario e inicia sesión")
-    @ApiResponse(responseCode = "200", description = "Cuenta creada exitosamente")
-    @ApiResponse(responseCode = "401", description = "No se pudo crear cuenta")
-    @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User credentials) {
-        Optional<User> user = userService.authenticateUser(
-                credentials.getCorreo(),
-                credentials.getContrasena()
-        );
-
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-    }
 
     @Operation(summary = "Cuenta todos los usuarios del sistema")
     @ApiResponse(responseCode = "200", description = "Cantidad de usuarios contados exitosamente")
