@@ -17,8 +17,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByContrasena(String contrasena);
 
   Optional<User> findByCorreoAndContrasena(String correo, String contrasena);
-
-  List<User> findAll();
-
-  long count();
 }
