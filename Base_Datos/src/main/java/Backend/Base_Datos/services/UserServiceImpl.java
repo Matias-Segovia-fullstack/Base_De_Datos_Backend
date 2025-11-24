@@ -33,16 +33,16 @@ public class UserServiceImpl implements UserService {
 
         List<Role> roles = new ArrayList<>();
 
-        Role defaultRole = roleRepository.findByName("ROLE_CLIENTE").orElseThrow(
-                () -> new RuntimeException("Error: El rol ROLE_CLIENTE no existe. Verifica LoadDatabase.")
-        );
-        roles.add(defaultRole);
-
         if (user.isAdmin()) {
             Role adminRole = roleRepository.findByName("ROLE_ADMINISTRADOR").orElseThrow(
                     () -> new RuntimeException("Error: El rol ROLE_ADMINISTRADOR no existe. Verifica LoadDatabase.")
             );
             roles.add(adminRole);
+        } else {
+            Role defaultRole = roleRepository.findByName("ROLE_CLIENTE").orElseThrow(
+                    () -> new RuntimeException("Error: El rol ROLE_CLIENTE no existe. Verifica LoadDatabase.")
+            );
+            roles.add(defaultRole);
         }
 
         user.setRoles(roles);
