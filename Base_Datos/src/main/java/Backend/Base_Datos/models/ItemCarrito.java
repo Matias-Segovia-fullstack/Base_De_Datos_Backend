@@ -1,5 +1,6 @@
 package Backend.Base_Datos.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,11 +23,13 @@ public class ItemCarrito {
     @Min(value = 1, message = "La cantidad debe ser al menos 1")
     private Integer cantidad;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "roles", "contrasena"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_id_usuario", nullable = false)
     @NotNull(message = "El item debe estar asociado a un usuario")
     private User user;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_id_producto", nullable = false)
     @NotNull(message = "El item debe estar asociado a un producto")

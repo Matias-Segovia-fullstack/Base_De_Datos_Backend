@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Schema(description = "Modelo de datos que representa a un usuario en el sistema. Se utiliza como contrato de la API.")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "roles"})
 @Entity
 @Table(name="usuario")
 @Getter @Setter
