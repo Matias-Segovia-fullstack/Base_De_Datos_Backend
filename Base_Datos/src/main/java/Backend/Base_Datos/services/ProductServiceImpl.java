@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    // URL BASE: Definida con tu Cloud Name y carpeta (lvl_up/)
+    private static final String CLOUDINARY_BASE_URL = "https://res.cloudinary.com/dch7p88hj/image/upload/lvl_up/";
+
     private final ProductRepository productRepository;
 
     @Autowired
@@ -20,6 +23,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product saveOrUpdateProduct(Product product) {
+        String incomingUrl = product.getImageUrl();
+
+        if (incomingUrl != null && !incomingUrl.isEmpty() && !incomingUrl.startsWith("http")) {
+
+            String cleanedKey = incomingUrl
+                    .replaceAll("\\.(jpg|jpeg|png|webp)$", "")
+                    .trim();
+
+            String fullUrl = CLOUDINARY_BASE_URL + cleanedKey + ".jpg";
+            product.setImageUrl(fullUrl);
+        }
+
         return productRepository.save(product);
     }
 

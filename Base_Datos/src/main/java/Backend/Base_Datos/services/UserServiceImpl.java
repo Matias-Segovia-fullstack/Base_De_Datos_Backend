@@ -16,6 +16,10 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    // URL BASE: Definida con tu Cloud Name y carpeta (lvl_up/)
+    private static final String CLOUDINARY_BASE_URL = "https://res.cloudinary.com/dch7p88hj/image/upload/lvl_up/";
+    private static final String DEFAULT_EXTENSION = ".jpg";
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -31,6 +35,18 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User saveOrUpdateUser(User user) {
 
+        String incomingUrl = user.getAvatarUrl();
+
+        if (incomingUrl != null && !incomingUrl.isEmpty() && !incomingUrl.startsWith("http")) {
+
+            String cleanedKey = incomingUrl
+                    .replaceAll("\\.(jpg|jpeg|png|webp|gif)$", "")
+                    .trim();
+
+            // Construye la URL completa forzando la extensión .jpg
+            String fullUrl = CLOUDINARY_BASE_URL + cleanedKey + DEFAULT_EXTENSION;
+            user.setAvatarUrl(fullUrl);
+        }
         List<Role> roles = new ArrayList<>();
 
         if (user.isAdmin()) {
