@@ -16,6 +16,7 @@ import java.util.Optional;
 @Tag(name = "Usuarios", description = "Endpoints para la gestión de usuarios y autenticación")
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService userService;

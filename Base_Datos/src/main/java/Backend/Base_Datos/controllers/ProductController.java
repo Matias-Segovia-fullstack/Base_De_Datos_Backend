@@ -88,4 +88,24 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Actualiza el precio y stock de un producto")
+    @ApiResponse(responseCode = "200", description = "Producto actualizado exitosamente")
+    @ApiResponse(responseCode = "404", description = "Producto no encontrado")
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable Long id,
+            @RequestBody Product productDetails) {
+
+        return productService.getProductById(id)
+                .map(product -> {
+                    // Actualizamos solo los campos que permitimos en el formulario de edición
+                    product.setPrice(productDetails.getPrice());
+                    product.setStock(productDetails.getStock());
+
+                    Product updatedProduct = productService.saveOrUpdateProduct(product);
+                    return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+                })
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
 }

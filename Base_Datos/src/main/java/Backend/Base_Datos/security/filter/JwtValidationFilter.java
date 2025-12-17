@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.AntPathMatcher;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -70,5 +71,15 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType(CONTENT_TYPE);
         }
+
+
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+        // 🔑 CLAVE: No filtrar (ignorar token) en estas rutas específicas
+        return pathMatcher.match("/api/users", request.getServletPath()) && request.getMethod().equalsIgnoreCase("POST")
+                || pathMatcher.match("/api/users/login", request.getServletPath());
     }
 }

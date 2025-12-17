@@ -9,6 +9,7 @@ import Backend.Base_Datos.repositories.RoleRepository; // Importar el nuevo Role
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import Backend.Base_Datos.services.ProductService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder; // Importar PasswordEncoder
 
@@ -25,6 +26,9 @@ public class LoadDatabase implements CommandLineRunner {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private PasswordEncoder passwordEncoder; // NUEVO: Inyectar PasswordEncoder
@@ -104,6 +108,6 @@ public class LoadDatabase implements CommandLineRunner {
                 new Product(null, "Mousepad Razer goliathus extended chroma", "Mousepads", 29990, 30, "mousepad_razer_url"),
                 new Product(null, "Polera gamer personalizada 'level-up'croma", "Poleras y polerones personalizados", 14990, 18, "polera_per_url")
         );
-        productRepository.saveAll(products);
+        products.forEach(product -> productService.saveOrUpdateProduct(product));
     }
 }

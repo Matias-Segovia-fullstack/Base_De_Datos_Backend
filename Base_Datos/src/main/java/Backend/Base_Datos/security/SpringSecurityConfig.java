@@ -3,6 +3,8 @@ package Backend.Base_Datos.security;
 import Backend.Base_Datos.security.filter.JwtAuthenticationFilter;
 import Backend.Base_Datos.security.filter.JwtValidationFilter;
 // CORRECCIÓN 1: Importar el filtro de Spring, NO el de Tomcat/Catalina
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -41,34 +43,26 @@ public class SpringSecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests((authz) -> {
+        return http
+                .csrf(csrf -> csrf.disable()) // Asegúrate de que esté al principio
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests((authz) -> {
                     authz
-                            // RUTAS PÚBLICAS
+                            // 🔑 REGLA DE ORO: Las rutas permitAll() SIEMPRE van primero
                             .requestMatchers(HttpMethod.POST, "/api/users", "/api/users/login").permitAll()
+                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permitir Preflight de CORS
                             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
 
-                            // CORRECCIÓN 2: Permitir ver productos a TODOS (Público)
-                            .requestMatchers(HttpMethod.GET, "/api/products", "/api/products/{id}", "/api/products/count").permitAll()
-
-                            // RUTAS PROTEGIDAS (Requieren Login/Rol)
-                            .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMINISTRADOR")
-                            .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasRole("ADMINISTRADOR")
-                            .requestMatchers(HttpMethod.PUT, "/api/products/decrease-stock/{id}").hasAnyRole("ADMINISTRADOR", "CLIENTE")
-
-                            .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/count", "/api/users/{id}").hasRole("ADMINISTRADOR")
-                            .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole("ADMINISTRADOR")
-
-                            .requestMatchers("/api/carrito/**").hasAnyRole("ADMINISTRADOR", "CLIENTE")
-
+                            // Resto de rutas protegidas
+                            .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMINISTRADOR")
                             .anyRequest().authenticated();
                 })
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtValidationFilter(authenticationManager()))
-                .csrf(config -> config.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(management ->
-                        management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                // Posicionamiento de filtros
+                .addFilterBefore(new JwtValidationFilter(authenticationManager()), BasicAuthenticationFilter.class)
+                .addFilterAt(new JwtAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+
+                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 
