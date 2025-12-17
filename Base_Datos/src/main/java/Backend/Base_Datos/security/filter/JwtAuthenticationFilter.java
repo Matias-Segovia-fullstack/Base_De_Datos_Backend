@@ -74,9 +74,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.addHeader(HEADER_STRING, JWT_TOKEN_PREFIX + token);
 
-        Map<String, String> body = new HashMap<>();
+        Map<String, Object> body = new HashMap<>();
         body.put("token", token);
         body.put("correo", correo);
+        body.put("authorities", roles);
         body.put("message", String.format("Autenticación exitosa para el usuario %s", correo));
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
